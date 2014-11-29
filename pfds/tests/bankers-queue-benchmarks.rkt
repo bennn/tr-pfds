@@ -15,7 +15,6 @@
 ;; triggers a rotation. In a proper implementation, the reversing is delayed 
 ;; so the tail operation should be instantaneous (ie should take 0 time).
 (define (assert e p) (if (p e) e (error 'assert)))
-(define (main) (begin
 ;; n = 21
 (let ([q (build-queue (assert (- (expt 2 21) 2) positive?) add1)])
   (time (tail q)))
@@ -93,7 +92,3 @@
 ;; after: 
 ;cpu time: 516 real time: 517 gc time: 336
 ;cpu time: 1468 real time: 1470 gc time: 852
-))
-
-(require contract-profile)
-(contract-profile-thunk main)

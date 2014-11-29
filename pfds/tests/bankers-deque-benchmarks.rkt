@@ -5,7 +5,6 @@
 ;; Performance-related Tests
 ;; #########################
 
-(define (main) (begin
 ;; Test to show performance improvement from less laziness
 ;; (ie using partial stream instead of stream)
 ;; -------------------------------------------------------
@@ -69,6 +68,3 @@
 ;; with partial streams:
 ;cpu time: 384 real time: 384 gc time: 224
 ;cpu time: 3736 real time: 3748 gc time: 2524
-))
-(require contract-profile)
-(contract-profile-thunk main)
