@@ -1,11 +1,11 @@
-#lang typed/racket
+#lang racket
 (require "../deque/bankers.rkt")
 
 ;; #########################
 ;; Performance-related Tests
 ;; #########################
 
-
+(define (main) (begin
 ;; Test to show performance improvement from less laziness
 ;; (ie using partial stream instead of stream)
 ;; -------------------------------------------------------
@@ -13,7 +13,7 @@
 ;; enqueue in rear, pull from front
 (let ([q (time (build-deque (expt 2 21) add1))])
     (time 
-     (let: loop : Integer ([q : (Deque Positive-Integer) q])
+     (let loop ([q q])
        (if (empty? q) 0 (+ (head q) (loop (tail q)))))))
 ;; on Steve's desktop (i7-2600k, 16GB), from cmd line
 ;; (1st time is deque build, 2nd is summing deque elements)
@@ -28,7 +28,7 @@
 ;; enqueue in rear, pull from rear
 (let ([q (time (build-deque (expt 2 21) add1))])
     (time 
-     (let: loop : Integer ([q : (Deque Positive-Integer) q])
+     (let loop ([q q])
        (if (empty? q) 0 (+ (last q) (loop (init q)))))))
 ;; on Steve's desktop (i7-2600k, 16GB), from cmd line
 ;; (1st time is deque build, 2nd is summing deque elements)
@@ -43,7 +43,7 @@
 ;; enqueue in front, pull from front
 (let ([q (time (build-deque-front (expt 2 21) add1))])
     (time 
-     (let: loop : Integer ([q : (Deque Positive-Integer) q])
+     (let loop ([q q])
        (if (empty? q) 0 (+ (head q) (loop (tail q)))))))
 ;; on Steve's desktop (i7-2600k, 16GB), from cmd line
 ;; (1st time is deque build, 2nd is summing deque elements)
@@ -59,7 +59,7 @@
 ;; enqueue in front, pull from rear
 (let ([q (time (build-deque-front (expt 2 21) add1))])
     (time 
-     (let: loop : Integer ([q : (Deque Positive-Integer) q])
+     (let loop ([q q])
        (if (empty? q) 0 (+ (last q) (loop (init q)))))))
 ;; on Steve's desktop (i7-2600k, 16GB), from cmd line
 ;; (1st time is deque build, 2nd is summing deque elements)
@@ -69,3 +69,6 @@
 ;; with partial streams:
 ;cpu time: 384 real time: 384 gc time: 224
 ;cpu time: 3736 real time: 3748 gc time: 2524
+))
+(require contract-profile)
+(contract-profile-thunk main)

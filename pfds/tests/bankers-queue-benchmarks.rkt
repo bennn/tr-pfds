@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang racket
 (require "../queue/bankers.rkt")
 
 ;; #########################
@@ -14,7 +14,8 @@
 ;; To demonstrate, build a queue of size 2^n - 2. Taking the tail of this queue
 ;; triggers a rotation. In a proper implementation, the reversing is delayed 
 ;; so the tail operation should be instantaneous (ie should take 0 time).
-
+(define (assert e p) (if (p e) e (error 'assert)))
+(define (main) (begin
 ;; n = 21
 (let ([q (build-queue (assert (- (expt 2 21) 2) positive?) add1)])
   (time (tail q)))
@@ -81,7 +82,7 @@
 
 (let ([q (time (build-queue (expt 2 21) add1))])
     (time 
-     (let: loop : Integer ([q : (Queue Positive-Integer) q])
+     (let loop ([q q])
        (if (empty? q) 0 (+ (head q) (loop (tail q)))))))
 
 ;; 2013-03-11, on Steve's desktop (i7-2600k, 16GB), from racket cmd line
@@ -92,4 +93,7 @@
 ;; after: 
 ;cpu time: 516 real time: 517 gc time: 336
 ;cpu time: 1468 real time: 1470 gc time: 852
+))
 
+(require contract-profile)
+(contract-profile-thunk main)
