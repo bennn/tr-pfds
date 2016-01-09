@@ -1,6 +1,6 @@
 #lang typed/racket
-
-(provide lookup bind trie insert Trie tries)
+(require typed/racket/unsafe)
+(provide lookup bind trie insert Trie tries Mt?)
 
 (require scheme/match)
 (define-type-alias (Key A) (Listof A))
